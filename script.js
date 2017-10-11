@@ -1,149 +1,133 @@
-var $buttons = document.getElementsByClassName('divBtn');
-var $numButtons = document.getElementsByClassName('number');
 var $display = document.getElementById('inpDisplay');
 
-var $storedNumber;
-var $currentOpNum;
-
-var $isOperating = false;
-var $clear = false;
-
-var $newNumberEntered = false;
+var $buttons = document.getElementsByClassName('divBtn');
+var $numButtons = document.getElementsByClassName('number');
 
 
+var $numCur = 0;
+var $numMem = 0;
+var $numRes = 0;
 
-for (var i = 0; i < $buttons.length; i++) {
+var $operating = false;
+var $operator;
 
-	//add click event for each button. I'm using an if/then to
-	//manually distinguish each key I need specifically
-
-	$buttons[i].addEventListener('click', function(){
-
-		var $btnLabel = this.innerText;
-		var $opDisplay = document.getElementById('spanOp');
-
-		if ($btnLabel == 'CE' || $btnLabel == 'C') {
-
-			$display.value = '';
-			$storedNumber = '';
-			$currentOpNum = '';
-			$opDisplay.innerText = '';
-			$isOperating = false;
-			$clear = false;
-		} 
-
-		else if ($btnLabel == '+')	{
-
-			
-
-			//if/then to first check if value in display
-			//then check if currently operating
-			//if not operating, store number and clear display
-
-			if ($display.value !== '') {
-
-				//check if currently operating
-
-				if ($isOperating === false) {
-
-					$newNumberEntered = false;
-					$isOperating = true;
-					$opDisplay.innerText = 'add';
-
-					$storedNumber = $display.value;
-					$display.value = $storedNumber;
-					$clear = false;
-
-				} else {
-
-					// $display.value = Number($display.value) + Number($storedNumber);
-					// $storedNumber = $display.value;
-					// $clear = false;
-
-
-
-					//check if new number entered. If true add display
-					// to stored number
-					//
-					//if false, add old operator
-
-					if ($newNumberEntered === true){
-
-						$currentOpNum = $display.value;
-						$display.value = Number($display.value) + Number($storedNumber);
-						$storedNumber = $display.value;
-					  $clear = false;
-					  $newNumberEntered = false;
-
-					}	else {
-
-						$display.value = Number($display.value) + Number($currentOpNum);
-						$storedNumber = $display.value;
-
-					}
+var $rollingAddition = false;
 
 
 
 
-				}
-			}
-
-
-
-		} else if ($btnLabel === '-') {
-
-			
-
-		}
-
-		//end of if/then for buttons NaN
-
-	});
-
-};
-
-
-
-
-
-for (var i = 0; i<$numButtons.length; i++) {
+//number buttons
+for (var i = 0; i < $numButtons.length; i++ ) {
 
 	$numButtons[i].addEventListener('click', function() {
 
-		var $btnLabel = Number(this.innerText);
+		if ($numCur == 0) {
 
-		$newNumberEntered = true;
-		
-		
-		if ($isOperating === false) {
-
-			$display.value += ($btnLabel);
+			$numCur = this.innerText;
+			$display.value = this.innerText;
 
 		} else {
 
-				//if/then to determing initial display clear after operator
-
-				if ($clear === false){			
-
-					$display.value = '';			
-					$display.value +=($btnLabel);
-					$clear = true;
-
-				} else {
-
-					$display.value +=($btnLabel);
-
-				}
+			$numCur +=this.innerText;
+			$display.value += this.innerText;
 		}
 
+	}); //end click event
+
+}
+
+//operator buttons
+
+for (var i = 0; i < $buttons.length; i++) {
+
+	$buttons[i].addEventListener('click', function() {
+
+		//addition
+
+		if (this.innerText == '+') {
+
+			if ($operating == false){
+
+				$numMem = Number($numCur);
+				$numCur = 0;
+				$operating = true;
+				$operator = '+';
+
+
+			} else {
+				//equals op
+
+				$numRes = Number($numCur) + $numMem;
+
+				$numMem += Number($numCur);
+				
+				$display.value = $numRes
+
+
+			}
+
+		} //end addition
+
+
+		//subtraction
+
+		if (this.innerText == '-') {
+
+			if ($operating == false){
+
+				$numMem = Number($numCur);
+				$numCur = 0;
+				$operating = true;
+				$operator = '-';
+
+
+			} else {
+				//equals op
+
+				$numRes = $numMem - Number($numCur);
+
+				$numMem -= Number($numCur);
+				
+				$display.value = $numRes
+
+
+			}
+
+		} //end subtraction
+
+		//Sum
+
+		if (this.innerText == '=') {
+
+			if ($operating == true) {
+
+				if ($operator === '-') {
+					$result = $numMem - $numCur;
+					$numMem -= $numCur;
+				} else if ($operator === '+'){
+					$result = Number($numMem) + Number($numCur);
+					$numMem += $numCur;
+				}
+
+				$display.value = Number($result);
+				$operating = false;
+
+			}
+
+		} //end subtraction
 
 
 
-	});
-
-	
 
 
 
 
-};
+
+
+
+
+
+
+	});//end click
+
+}
