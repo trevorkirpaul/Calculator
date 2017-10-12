@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,700,900');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700,900');
 
 * { 
 
@@ -14,12 +14,48 @@
 	grid-template-columns: 1fr 1fr 1fr 1fr;
 
 	width: 75%;
+	max-width: 600px;
 	margin: 5vh auto;
 }
 
 body {
 	background-color: #F4FAFD;
 }
+
+#titleBar {
+	background-color: #262626;
+	color: #F4FAFD;
+	grid-column: 1/5;
+	height: 85px;
+
+	margin: 0px 5px 10px 5px;
+	padding: 10px 25px;
+	font-family: 'Roboto', sans-serif;	
+
+}
+
+
+#titleBar h1 {
+	font-weight: 700;
+	padding-bottom: 3px;
+}
+
+#titleBar h1 i {
+	color: #C9A6DC;
+	padding-right: 5px;
+}
+
+#titleBar small {
+	
+	
+	margin-left: 49px;
+	font-weight: 300;
+	/*color: #C9A6DC;*/
+
+
+}
+
+
 
 header {
 	grid-column: 1/5;
@@ -49,15 +85,18 @@ header {
 }
 
 
+
+
 /*BEGIN STYLING FOR OPERATION INDICATOR
 	This sits inside the display */
 
 #divOp {
 	position: absolute;
 	left: 25px;
-	top: 40px;
+	top: 30px;
 
 	font-family: 'Roboto', sans-serif;
+	font-size: 70%;
 }
 
 
@@ -80,7 +119,7 @@ header {
 	text-align: center;
 	font-size: 150%;
 	font-family: 'Roboto', sans-serif;
-
+	font-weight:  400;
 	transition: 0.2s;
 }
 
