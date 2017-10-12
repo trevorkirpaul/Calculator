@@ -1,68 +1,128 @@
-var $buttons = document.getElementsByClassName('divBtn');
+var $numberOne = 0;
+var $numberTwo = 0;
+var $result = 0;
 
-for ( var i = 0; i < $buttons.length; i++) {
-	$buttons[i].addEventListener('click', function() {
+var $operating = false;
+var $operator;
+var $preventMultiTap = false;
+var $summed = false;
 
-		var $display = document.getElementById('inpDisplay');
+var $display = document.getElementById('inpDisplay');
+var $spanOp = document.getElementById('spanOp');
 
-		
+var $numButtons = document.getElementsByClassName('number');
+var $fxnButtons = document.getElementsByClassName('divBtn');
 
-		//CE, C
 
-		if (this.innerText === 'C' || this.innerText === 'CE') {
 
-			$display.value = '';
+//find all num buttons
 
-		} else if (this.innerText === '+') {
+for (var i = 0; i < $numButtons.length; i++) {
 
-			if ($display.value !== '') {
+	$numButtons[i].addEventListener('click', function() {
 
-				$display.value += this.innerText;
+		if ($operating == false && $summed == false) {
 
-			};
+			if ($display.value == 0) {
+				$display.value = this.innerText;
+				$numberOne = this.innerText;
 
-		} else if (this.innerText === '-') {
-
-			if ($display.value !== '') {
-
-				$display.value += this.innerText;
-
-			};
-
-		} else if (this.innerText === '*') {
-
-			if ($display.value !== '') {
+			} else {
 
 				$display.value += this.innerText;
+				$numberOne += this.innerText;
 
-			};
+			}
+		} else if ($operating == true) {
 
-		} else if (this.innerText === '/') {
+			$preventMultiTap = false;
 
-			$display.value += this.innerText;
+			if (isNaN($display.value) == true) {
 
-		} else if (this.className === 'divBtn number') {
+				$display.value = this.innerText;
+				$numberTwo = this.innerText;
 
-			$display.value += this.innerText;
+			} else if ($result == 'resulted') {
 
-		} else if (this.innerText === '=') {
+				$result = 0;
+				$display.value = this.innerText;
+				$numberTwo = this.innerText;
 
-			$display.value =  eval($display.value);
+			}	else if ($summed == true) {
+
+				alert('etst');
+
+			} else {
+				$display.value += this.innerText;
+				$numberTwo += this.innerText;
+			}
+		}; //end if operating is false/true
 
 
-		} else if (this.innerText === 'del') {
+	}); //end click event
+} //end find num buttons
 
-			if ($display.value !== '') {
-				var $length = ($display.value.length) - 1;
+//find all fxn buttons
+
+for (var i = 0; i < $fxnButtons.length; i++) {
+
+	$fxnButtons[i].addEventListener('click', function() {
+
+		if (this.innerText == 'CE' || this.innerText == 'C') {
+
+			$numberOne = 0;
+			$numberTwo = 0;
+			$result = 0;
+			$display.value = 0;
+			$operating = false;
+			$result = '';
+			$preventMultiTap = false;
+			$spanOp.innerText = '';
+			$operator = '';
+			$summed = false;
+
+		} else if (this.innerText == '+' || this.innerText == '-' || this.innerText == '*' || this.innerText == '/' ) {
+
+			if ($display.value != 0) {
+				
+				if ($operating == false && $summed == false) {
+
+					$operating = true;
+					$operator = this.innerText;
+					$display.value = this.innerText;
+
+				} else if ($operating == true && $preventMultiTap == false && $summed == false) {
+
+					$spanOp.innerText = $numberOne + ' ' + $operator + ' ' + $numberTwo + ' ='; 
+					$result = eval($numberOne + $operator + $numberTwo);
+					$operator = this.innerText;
+					$display.value = $result
+					$numberOne = $result;
+					
+					$result = 'resulted';
+					
+					$preventMultiTap = true;
 
 
-				$display.value = $display.value.slice(0, $length);
+				} else if ($summed == true) {
+
+
+
+				}; //end if/then $operating
+
+			}; //end if/then check $display != 0
+
+		} else if (this.innerText == '=') {
+
+			if ($operating == true && ($numberTwo != 0) && ($operator != '')) {
+				$operating = false;
+				$display.value = eval($numberOne + $operator + $numberTwo);
+				$summed = true;
+				$preventMultiTap = true;
 			}
 
-		}//end if this.innerText
+		}
 
+	}); //end click event
 
-		
-
-	});
-}
+} //end find all fxn buttons
